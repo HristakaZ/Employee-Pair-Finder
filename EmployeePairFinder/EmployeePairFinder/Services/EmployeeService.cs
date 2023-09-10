@@ -27,6 +27,8 @@ namespace EmployeePairFinder.Services
                                 CalculatePairProjectWorkServiceDurationInDays(employee, employeeForProject), keyValuePair.Key);
                             employeePairs.Add(employeePair);
                         }
+
+                        employee = employeeForProject;
                     }
                 }
             }

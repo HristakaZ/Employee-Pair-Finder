@@ -9,77 +9,28 @@ namespace EmployeePairFinder.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
-        public EmployeeController(IEmployeeService employeeService)
+        private readonly IFileService _fileService;
+        public EmployeeController(IEmployeeService employeeService,
+                                  IFileService fileService)
         {
             _employeeService = employeeService;
+            _fileService = fileService;
         }
 
-        [HttpGet]
-        public IActionResult Get()
+        [HttpPost]
+        [Route("FindLongestWorkingProjectEmployeePairs")]
+        public IActionResult Post(IFormFile csvFile)
         {
-            List<Employee> employeeProjectDTOs = new List<Employee>()
+            if (!_fileService.IsFileExtensionValid(csvFile))
             {
-                new Employee()
-                {
-                    EmpID = 1,
-                    ProjectID = 1,
-                    DateFrom = new DateTime(year: 2023, month: 1, day: 9),
-                    DateTo = new DateTime(year: 2023, month: 9, day: 9)
-                },
-                new Employee()
-                {
-                    EmpID = 2,
-                    ProjectID = 1,
-                    DateFrom = new DateTime(year: 2022, month: 12, day: 9),
-                    DateTo = new DateTime(year: 2023, month: 9, day: 9)
-                },
-                new Employee()
-                {
-                    EmpID = 3,
-                    ProjectID = 1,
-                    DateFrom = new DateTime(year: 2023, month: 6, day: 9),
-                    DateTo = new DateTime(year: 2023, month: 9, day: 9)
-                },
-                new Employee()
-                {
-                    EmpID = 4,
-                    ProjectID = 1,
-                    DateFrom = new DateTime(year: 2023, month: 12, day: 31),
-                    DateTo = null
-                },
-                new Employee()
-                {
-                    EmpID = 5,
-                    ProjectID = 2,
-                    DateFrom = new DateTime(year: 2022, month: 9, day: 9),
-                    DateTo = new DateTime(year: 2023, month: 9, day: 9)
-                },
-                new Employee()
-                {
-                    EmpID = 6,
-                    ProjectID = 2,
-                    DateFrom = new DateTime(year: 2022, month: 10, day: 9),
-                    DateTo = new DateTime(year: 2023, month: 9, day: 9)
-                },
-                new Employee()
-                {
-                    EmpID = 7,
-                    ProjectID = 2,
-                    DateFrom = new DateTime(year: 2022, month: 11, day: 9),
-                    DateTo = new DateTime(year: 2023, month: 9, day: 9)
-                },
-                new Employee()
-                {
-                    EmpID = 8,
-                    ProjectID = 2,
-                    DateFrom = new DateTime(year: 2023, month: 12, day: 31),
-                    DateTo = null
-                }
-            };
+                return BadRequest("File must be csv.");
+            }
+
+            List<Employee> employees = _fileService.GetEmployeesFromFile(csvFile);
 
             //step 1: group the employees by project
             Dictionary<int, List<Employee>> groupedEmployeesByProject =
-                employeeProjectDTOs.GroupBy(x => x.ProjectID).ToDictionary(x => x.Key, y => y.ToList());
+                employees.GroupBy(x => x.ProjectID).ToDictionary(x => x.Key, y => y.ToList());
 
             /*step 2: find the employees that have worked together by getting the common dates of their work service on one project
             (find whether the start date of one employee overlaps with the work of service duration of another employee for the same
