@@ -12,23 +12,22 @@ namespace EmployeePairFinder.Services
             foreach (KeyValuePair<int, List<Employee>> keyValuePair in groupedEmployeesByProject)
             {
                 Employee? employee = keyValuePair.Value.FirstOrDefault();
-                if (employee == null)
-                {
-                    throw new Exception("No employees have worked on this project.");
-                }
 
-                foreach (Employee employeeForProject in keyValuePair.Value)
+                if (employee != null)
                 {
-                    if (employee.EmpID != employeeForProject.EmpID)
+                    foreach (Employee employeeForProject in keyValuePair.Value)
                     {
-                        if (IsWorkExperienceOverlapping(employee, employeeForProject))
+                        if (employee.EmpID != employeeForProject.EmpID)
                         {
-                            EmployeePair employeePair = new EmployeePair(employee, employeeForProject,
-                                CalculatePairProjectWorkServiceDurationInDays(employee, employeeForProject), keyValuePair.Key);
-                            employeePairs.Add(employeePair);
-                        }
+                            if (IsWorkExperienceOverlapping(employee, employeeForProject))
+                            {
+                                EmployeePair employeePair = new EmployeePair(employee, employeeForProject,
+                                    CalculatePairProjectWorkServiceDurationInDays(employee, employeeForProject), keyValuePair.Key);
+                                employeePairs.Add(employeePair);
+                            }
 
-                        employee = employeeForProject;
+                            employee = employeeForProject;
+                        }
                     }
                 }
             }

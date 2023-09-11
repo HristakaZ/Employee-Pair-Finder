@@ -1,0 +1,53 @@
+<div>
+    <h1>Upload a CSV file containing <b>EmpID,ProjectID,DateFrom,DateTo</b> for each employee.</h1>
+    <h3>Afterwards, information about the pairs that have worked the longest on one project will be displayed.</h3>
+    <br>
+    <br>
+    <button type="button" mat-raised-button (click)="fileInput.click()">Upload</button>
+    <input hidden (change)="onFileSelected($event)" #fileInput type="file" enctype="multipart/form-data">
+    <span class="file-name" *ngIf="selectedFile">{{selectedFile.name}}</span>
+    <br>
+    <br>
+</div>
+<br>
+<br>
+<table mat-table matSort [dataSource]="employeePairs" class="mat-elevation-z8" *ngIf="employeePairs.length > 0">
+    <ng-container matColumnDef="firstEmployee">
+        <th mat-header-cell *matHeaderCellDef>First Employee</th>
+        <td mat-cell *matCellDef="let employeePair">
+            ID: {{employeePair.firstEmployee.empID}}
+            <br>
+            <br>
+            From Date: {{employeePair.firstEmployee.dateFrom | date: 'dd.MM.yyyy'}}
+            <br>
+            <br>
+            To Date: {{employeePair.firstEmployee.dateTo | date: 'dd.MM.yyyy'}}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="secondEmployee">
+        <th mat-header-cell *matHeaderCellDef>Second Employee</th>
+        <td mat-cell *matCellDef="let employeePair">
+            ID: {{employeePair.secondEmployee.empID}}
+            <br>
+            <br>
+            From Date: {{employeePair.secondEmployee.dateFrom | date: 'dd.MM.yyyy'}}
+            <br>
+            <br>
+            To Date: {{employeePair.secondEmployee.dateTo | date: 'dd.MM.yyyy'}}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="durationInDays">
+        <th mat-header-cell *matHeaderCellDef>Duration In Days</th>
+        <td mat-cell *matCellDef="let employeePair">{{employeePair.durationInDays}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="projectID">
+        <th mat-header-cell *matHeaderCellDef>Project ID</th>
+        <td mat-cell *matCellDef="let employeePair">{{employeePair.projectID}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
+</table>

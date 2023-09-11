@@ -1,0 +1,9 @@
+html,
+body {
+    vertical-align: middle;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}

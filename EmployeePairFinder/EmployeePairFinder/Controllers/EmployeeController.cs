@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EmployeePairFinder.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
@@ -18,15 +18,17 @@ namespace EmployeePairFinder.Controllers
         }
 
         [HttpPost]
-        [Route("FindLongestWorkingProjectEmployeePairs")]
-        public IActionResult Post(IFormFile csvFile)
+        public IActionResult Post([FromForm] CsvFileWrapper csvFileWrapper)
         {
-            if (!_fileService.IsFileExtensionValid(csvFile))
+            if (!_fileService.IsFileExtensionValid(csvFileWrapper.CsvFile))
             {
-                return BadRequest("File must be csv.");
+                return BadRequest(new
+                {
+                    Error = "File must be csv."
+                });
             }
 
-            List<Employee> employees = _fileService.GetEmployeesFromFile(csvFile);
+            List<Employee> employees = _fileService.GetEmployeesFromFile(csvFileWrapper.CsvFile);
 
             //step 1: group the employees by project
             Dictionary<int, List<Employee>> groupedEmployeesByProject =

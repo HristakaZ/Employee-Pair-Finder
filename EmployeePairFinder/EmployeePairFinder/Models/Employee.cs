@@ -58,7 +58,7 @@ namespace EmployeePairFinder.Models
         {
             if (dateToAcceptedNullValues.Any(x => x == text))
             {
-                return DateTime.Now;
+                return DateTime.Now.Date;
             }
 
             return base.ConvertFromString(text, row, memberMapData);

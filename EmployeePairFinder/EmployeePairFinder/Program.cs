@@ -18,6 +18,7 @@ namespace EmployeePairFinder
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
             builder.Services.AddScoped<IFileService, FileService>();
+            builder.Services.AddCors();
 
             var app = builder.Build();
 
@@ -34,6 +35,14 @@ namespace EmployeePairFinder
 
 
             app.MapControllers();
+
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
 
             app.Run();
         }
