@@ -1,5 +1,5 @@
 # Hristoslav-Zahariev-employees
-An application that finds the employee pair that has worked the longest on one project.
+An application that finds the employee pair that has worked the longest on one project through a csv file.
 
 # Steps to run the project
 Prerequisites: .NET, Node, Visual Studio, Visual Studio Code.
